@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+  FXML file for the "Enclosure View" of the Zoo Management System.
+  This view corresponds to the mockup provided, allowing users to
+  view and manage animals within a specific enclosure.
+  
+  Based on the project context, this view would be controlled by
+  a class like "EnclosureViewController".
+-->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- 
+  Root container is a BorderPane.
+  - The 'top' region holds the header (Back button, Title, Subtitle).
+  - The 'center' region holds the main content (Animal List and Action Buttons).
+  
+  The fx:controller attribute points to the controller class that will manage this view.
+  The package name is based on the 'module-info.java' example you provided.
+-->
+
+<BorderPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.oop2a3zms.Controllers.EnclosureViewController">
+
+    <!-- 
+      FIX: Changed <styles> to <style>
+      This is the correct FXML tag for inline CSS.
+    -->
+    <style>
+        /* Apply dark background and light text to the entire view */
+        #rootPane {
+            -fx-background-color: #222222;
+            -fx-padding: 20;
+        }
+        
+        /* Style for all labels */
+        .label {
+            -fx-text-fill: #FFFFFF;
+        }
+
+        /* Style for the main title label */
+        #enclosureNameLabel {
+            -fx-font-size: 24pt;
+            -fx-font-weight: bold;
+        }
+
+        /* Style for the subtitle label */
+        #subtitleLabel {
+            -fx-font-size: 11pt;
+            -fx-text-fill: #DDDDDD; /* Slightly dimmer white */
+        }
+        
+        /* Style for the section header */
+        #animalListLabel {
+             -fx-font-size: 14pt;
+             -fx-font-weight: bold;
+        }
+        
+        /* Style for the helper text */
+        #actionHelperLabel {
+            -fx-text-fill: #AAAAAA;
+            -fx-text-alignment: center;
+        }
+
+        /* Style for all buttons */
+        .button {
+            -fx-background-color: #444444;
+            -fx-text-fill: #FFFFFF;
+            -fx-background-radius: 8;
+            -fx-border-color: #666666;
+            -fx-border-radius: 8;
+            -fx-min-width: 120; /* Give buttons a consistent width */
+            -fx-pref-height: 35;
+        }
+        
+        .button:hover {
+            -fx-background-color: #555555;
+        }
+        
+        /* Special style for the back button */
+        #backButton {
+            -fx-min-width: 60;
+        }
+        
+        /* Style for the ListView */
+        .list-view {
+             -fx-background-color: #333333;
+             -fx-border-color: #666666;
+             -fx-border-radius: 4;
+        }
+        
+        .list-view .list-cell {
+            -fx-background-color: transparent;
+            -fx-text-fill: #FFFFFF;
+            -fx-font-size: 12pt;
+            -fx-padding: 8;
+        }
+
+        .list-view .list-cell:filled:selected,
+        .list-view .list-cell:filled:selected:focused {
+            -fx-background-color: #0078D7; /* Blue selection color */
+            -fx-text-fill: white;
+        }
+
+        .list-view .list-cell:filled:hover {
+            -fx-background-color: #444444;
+        }
+
+    </style>
+    
+    <!-- TOP REGION: Header Content -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0">
+            <children>
+                <!-- Back Button: fx:id links to controller method -->
+                <Button fx:id="backButton" minWidth="60.0" mnemonicParsing="false" onAction="#onBackButtonClick" text="Back" />
+                
+                <!-- Title and Subtitle VBox -->
+                <VBox>
+                    <children>
+                        <!-- Enclosure Name: This label's text will be set dynamically by the controller -->
+                        <Label fx:id="enclosureNameLabel" alignment="TOP_CENTER" prefHeight="35.0" prefWidth="430.0" text="Enclosure View" textAlignment="CENTER">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="subtitleLabel" alignment="TOP_CENTER" prefHeight="17.0" prefWidth="425.0" text="View and Manage the animals in this enclosure." />
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets bottom="20.0" />
+            </padding>
+        </HBox>
+    </top>
+
+    <!-- CENTER REGION: Main Content (List and Actions) -->
+    <center>
+        <HBox spacing="30.0">
+            <children>
+            
+                <!-- Left Side: Animal List -->
+                <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label fx:id="animalListLabel" alignment="TOP_CENTER" prefHeight="7.0" prefWidth="298.0" text="Animals List">
+                     <font>
+                        <Font name="Bell MT" size="12.0" />
+                     </font></Label>
+                        
+                        <!-- 
+                          Animal List View: fx:id links to the ListView object in the controller.
+                          The controller will populate this list with Animal objects.
+                          It's set to grow vertically and horizontally.
+                        -->
+                        <ListView fx:id="animalListView" prefHeight="251.0" prefWidth="298.0" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+                
+                <!-- Right Side: Action Buttons -->
+                <VBox alignment="TOP_CENTER" spacing="15.0">
+                    <children>
+                        <!-- Add Animal Button -->
+                        <Button fx:id="addAnimalButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#onAddAnimalClick" text="Add Animal" />
+                        
+                        <Label fx:id="actionHelperLabel" prefHeight="23.0" prefWidth="232.0" text="Select one animal to view more / do actions" textAlignment="CENTER" wrapText="true">
+                            <padding>
+                                <Insets bottom="5.0" top="20.0" />
+                            </padding>
+                        </Label>
+                        
+                        <!-- Animal Action Button Group -->
+                        <Button fx:id="viewAnimalButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#onViewAnimalClick" prefHeight="17.0" prefWidth="232.0" text="Animal View" />
+                        <Button fx:id="editAnimalButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#onEditAnimalClick" text="Edit Animal" />
+                        <Button fx:id="deleteAnimalButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#onDeleteAnimalClick" text="Delete Animal" />
+                    </children>
+                    <padding>
+                        <Insets top="35.0" /> <!-- To align "Add Animal" with the top of the list -->
+                    </padding>
+                </VBox>
+                
+            </children>
+        </HBox>
+    </center>
+    
+</BorderPane>
