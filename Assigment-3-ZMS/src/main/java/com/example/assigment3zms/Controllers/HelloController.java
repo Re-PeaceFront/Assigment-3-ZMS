@@ -1,4 +1,4 @@
-package com.example.assigment3zms;
+package com.example.assigment3zms.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
