@@ -16,7 +16,7 @@ import javafx.beans.property.IntegerProperty;
  * FIX: Changed age from 'double' (in repo) to 'int' to match the
  * provided ImportHelper.java class.
  *
- * @author Ren (Student)
+ * @author Rene
  * @version 2.0
  */
 public abstract class Animal {
