@@ -1,5 +1,5 @@
 module com.example.assigment3zms {
-    requires javafx.controls;
+    requires transitive javafx.controls;
     requires javafx.fxml;
 
 
