@@ -1,100 +1,95 @@
 package com.example.assigment3zms.Model;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.property.IntegerProperty;
+
 /**
- * The {@code Animal} class represents an animal with a name and age.
- * It provides methods to access and modify these properties.
- * <p>
- * This class ensures that the age of the animal cannot be negative.
- * </p>
+ * Abstract base class for all animals in the zoo.
+ * Provides basic properties: name and age.
  *
- * @author Matt
- * @version 1.0
+ * REFACTOR: Changed fields to JavaFX Properties (StringProperty, IntegerProperty)
+ * to support data binding for the MVC pattern. This is a much stronger
+ * implementation of MVC.
+ *
+ * FIX: Changed age from 'double' (in repo) to 'int' to match the
+ * provided ImportHelper.java class.
+ *
+ * @author Rene
+ * @version 2.0
  */
-public class Animal {
+public abstract class Animal {
+    private final StringProperty name;
+    private final IntegerProperty age;
 
     /**
-     * The name of the animal.
-     */
-    private String aName;
-
-    /**
-     * The age of the animal in years.
-     */
-    private double aAge;
-
-    /**
-     * Constructs a new {@code Animal} with the specified name and age.
+     * Constructor for the Animal class.
      *
-     * @param pName the name of the animal
-     * @param pAge  the age of the animal in years; must be non-negative
-     * @throws IllegalArgumentException if {@code pAge} is negative
+     * @param name The name of the animal.
+     * @param age  The age of the animal (as an int).
      */
-    public Animal(String pName, double pAge) {
-        this.setName(pName);
-        this.setAge(pAge);
-    }
-
-    /**
-     * Returns the name of the animal.
-     *
-     * @return the name of the animal
-     */
-    public String getName() {
-        return aName;
-    }
-
-    /**
-     * Sets the name of the animal.
-     * <p>
-     * The name must not be {@code null} or empty.
-     * </p>
-     *
-     * @param pName the new name of the animal
-     * @throws IllegalArgumentException if {@code pName} is {@code null} or empty
-     */
-
-    public void setName(String pName) {
-        if (pName == null || pName.trim().isEmpty()) {
+    public Animal(String name, int age) {
+        if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
-        this.aName = pName;
-    }
-
-    /**
-     * Returns the age of the animal.
-     *
-     * @return the age of the animal in years
-     */
-    public double getAge() {
-        return aAge;
-    }
-
-    /**
-     * Sets the age of the animal.
-     * <p>
-     * The age must be non-negative. If a negative value is provided,
-     * an {@code IllegalArgumentException} is thrown.
-     * </p>
-     *
-     * @param pAge the new age of the animal in years
-     * @throws IllegalArgumentException if {@code pAge} is negative
-     */
-    public void setAge(double pAge) {
-        if (pAge < 0)
+        if (age < 0) {
             throw new IllegalArgumentException("Age cannot be smaller than 0!");
-        this.aAge = pAge;
+        }
+        this.name = new SimpleStringProperty(name);
+        this.age = new SimpleIntegerProperty(age);
+    }
+
+    // --- JavaFX Property Getters ---
+
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    public IntegerProperty ageProperty() {
+        return age;
+    }
+
+    // --- Standard Getters ---
+
+    public String getName() {
+        return name.get();
+    }
+
+    public int getAge() {
+        return age.get();
+    }
+
+    // --- Standard Setters ---
+
+    public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
+        this.name.set(name);
+    }
+
+    public void setAge(int age) {
+        if (age < 0) {
+            throw new IllegalArgumentException("Age cannot be smaller than 0!");
+        }
+        this.age.set(age);
     }
 
     /**
-     * Returns a string representation of the animal.
-     * <p>
-     * This implementation returns the name of the animal.
-     * </p>
+     * Returns the species of the animal.
      *
-     * @return the name of the animal
+     * @return A string representing the animal's species (e.g., "Lion").
+     */
+    public abstract String getSpecies();
+
+    /**
+     * Provides a string representation of the animal for display in ListViews.
+     *
+     * @return A string formatted as "Name (Age years) - Species".
      */
     @Override
     public String toString() {
-        return this.getName();
+        return String.format("%s (%d years) - %s", getName(), getAge(), getSpecies());
     }
 }
