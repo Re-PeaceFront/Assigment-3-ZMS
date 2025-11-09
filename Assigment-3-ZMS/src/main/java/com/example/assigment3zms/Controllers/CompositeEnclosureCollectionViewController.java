@@ -1,6 +1,7 @@
 package com.example.assigment3zms.Controllers;
 
 import com.example.assigment3zms.Helpers.ImportHelper;
+import com.example.assigment3zms.Model.CompositeEnclosureCollection;
 import com.example.assigment3zms.Model.EnclosureCollection;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -25,9 +26,17 @@ public class CompositeEnclosureCollectionViewController {
     @FXML
     private Button closeButton;
 
+    private CompositeEnclosureCollection aCompositeEnclosureCollection;
+
     @FXML
     public void initialize() {
-        enclosureListView.setItems(FXCollections.observableArrayList(ImportHelper.createAnimals().getChildren()));
+        setComposite(ImportHelper.createAnimals());
+        // TODO once composite implements EnclosureCollection interface, uncomment the next line
+        // enclosureListView.setItems(FXCollections.observableArrayList(this.aCompositeEnclosureCollection.getChildren()));
+    }
+
+    public void setComposite(CompositeEnclosureCollection pCompositeEnclosureCollection) {
+        this.aCompositeEnclosureCollection = pCompositeEnclosureCollection;
     }
 
     @FXML
