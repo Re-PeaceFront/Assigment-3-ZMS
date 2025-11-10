@@ -1,12 +1,27 @@
 package com.example.assigment3zms.Controllers;
 
+import com.example.assigment3zms.Helpers.ImportHelper;
+import com.example.assigment3zms.Model.CompositeEnclosureCollection;
+import com.example.assigment3zms.Model.Enclosure;
 import com.example.assigment3zms.Model.EnclosureCollection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * @author Emmanuelle
+ * Controller for the CompositeEnclosureCollection view
+ * It displays a list of enclosures and collections by opening an enclosure view
+ */
 public class CompositeEnclosureCollectionViewController {
     @FXML
     private TextField searchTextField;
@@ -23,10 +38,91 @@ public class CompositeEnclosureCollectionViewController {
     @FXML
     private Button closeButton;
 
+    /**
+     * Root composite collection loaded using ImportHelper
+     */
+    private CompositeEnclosureCollection rootCollection;
+
+    /**
+     * ObservableList is a list of currently displayed enclosure items
+     */
+    private ObservableList<EnclosureCollection> displayedChildren;
+
+    /**
+     * This method initializes the view by loading the Big Cats composite collection,
+     * filling the ListView, and enabling live search filtering.
+     */
     @FXML
-    private void onOpenButtonClick() {
+    private void initialize() {
+        // Load Big Cats from ImportHelper
+        rootCollection = ImportHelper.createAnimals();
+
+        // Load the children into the ListView
+        displayedChildren = FXCollections.observableArrayList(rootCollection.getChildren());
+        enclosureListView.setItems(displayedChildren);
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> filterList(newValue));
 
     }
+
+    /**
+     * This method filters the ListView based on the user's search input
+     * @param searchTerm the text entered in the search field
+     */
+    private void filterList(String searchTerm) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            displayedChildren.setAll(rootCollection.getChildren());
+            return;
+        }
+
+        displayedChildren.setAll(rootCollection.getChildren().stream()
+                .filter(collection -> collection.getName().toLowerCase()
+                        .contains(searchTerm.toLowerCase()))
+                            .toList()
+        );
+    }
+
+    /**
+     * Handles the Open button
+     * If the selected item is a composite, a warning alert is shown.
+     * If it is an enclosure, the enclosure view window is opened.
+     */
+    @FXML
+    private void onOpenButtonClick() {
+        EnclosureCollection selected =  enclosureListView.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+
+        if (selected.isComposite()) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Invalid Selection");
+            alert.setHeaderText("Invalid Selection");
+            alert.setContentText("Please select an enclosure");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("enclosure-view.fxml"));
+            Parent view = loader.load();
+
+            EnclosureViewController controller = loader.getController();
+            controller.setEnclosure((Enclosure) selected);
+
+            Stage nextStage = new Stage();
+            nextStage.setScene(new Scene(view));
+            nextStage.initModality(Modality.WINDOW_MODAL);
+            nextStage.initOwner(openButton.getScene().getWindow());
+            nextStage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Closes the current window when the Back button is pressed.
+     */
 
     @FXML
     private void onBackButtonClick() {
@@ -34,10 +130,12 @@ public class CompositeEnclosureCollectionViewController {
         stage.close();
     }
 
+    /**
+     * Closes the current window when the Close button is pressed.
+     */
     @FXML
     private void onCloseButtonClick() {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }
-
 }
