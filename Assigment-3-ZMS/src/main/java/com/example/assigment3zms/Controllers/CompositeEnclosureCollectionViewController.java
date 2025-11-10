@@ -17,6 +17,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * @author Emmanuelle
+ * Controller for the CompositeEnclosureCollection view
+ * It displays a list of enclosures and collections by opening an enclosure view
+ */
 public class CompositeEnclosureCollectionViewController {
     @FXML
     private TextField searchTextField;
@@ -33,9 +38,20 @@ public class CompositeEnclosureCollectionViewController {
     @FXML
     private Button closeButton;
 
+    /**
+     * Root composite collection loaded using ImportHelper
+     */
     private CompositeEnclosureCollection rootCollection;
+
+    /**
+     * ObservableList is a list of currently displayed enclosure items
+     */
     private ObservableList<EnclosureCollection> displayedChildren;
 
+    /**
+     * This method initializes the view by loading the Big Cats composite collection,
+     * filling the ListView, and enabling live search filtering.
+     */
     @FXML
     private void initialize() {
         // Load Big Cats from ImportHelper
@@ -49,6 +65,10 @@ public class CompositeEnclosureCollectionViewController {
 
     }
 
+    /**
+     * This method filters the ListView based on the user's search input
+     * @param searchTerm the text entered in the search field
+     */
     private void filterList(String searchTerm) {
         if (searchTerm == null || searchTerm.isEmpty()) {
             displayedChildren.setAll(rootCollection.getChildren());
@@ -62,6 +82,11 @@ public class CompositeEnclosureCollectionViewController {
         );
     }
 
+    /**
+     * Handles the Open button
+     * If the selected item is a composite, a warning alert is shown.
+     * If it is an enclosure, the enclosure view window is opened.
+     */
     @FXML
     private void onOpenButtonClick() {
         EnclosureCollection selected =  enclosureListView.getSelectionModel().getSelectedItem();
@@ -95,12 +120,19 @@ public class CompositeEnclosureCollectionViewController {
 
     }
 
+    /**
+     * Closes the current window when the Back button is pressed.
+     */
+
     @FXML
     private void onBackButtonClick() {
         Stage stage = (Stage) backButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Closes the current window when the Close button is pressed.
+     */
     @FXML
     private void onCloseButtonClick() {
         Stage stage = (Stage) closeButton.getScene().getWindow();
