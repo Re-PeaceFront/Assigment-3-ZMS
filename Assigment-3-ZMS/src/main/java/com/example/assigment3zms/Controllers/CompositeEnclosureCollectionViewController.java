@@ -4,6 +4,7 @@ import com.example.assigment3zms.Helpers.ImportHelper;
 import com.example.assigment3zms.Model.CompositeEnclosureCollection;
 import com.example.assigment3zms.Model.Enclosure;
 import com.example.assigment3zms.Model.EnclosureCollection;
+import com.example.assigment3zms.ZooApplication;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -102,7 +103,7 @@ public class CompositeEnclosureCollectionViewController {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("enclosure-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(ZooApplication.class.getResource("enclosure-view.fxml"));
             Parent view = loader.load();
 
             EnclosureViewController controller = loader.getController();
