@@ -39,8 +39,7 @@ public class CompositeEnclosureCollectionViewController {
     private ObservableList<EnclosureCollection> displayedChildren;
 
     /**
-     * This method initializes the view by loading the Big Cats composite collection,
-     * filling the ListView, and enabling live search filtering.
+     * This method initializes the view by loading the Big Cats composite collection.
      */
     @FXML
     private void initialize() {
