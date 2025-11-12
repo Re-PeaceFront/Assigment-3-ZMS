@@ -11,10 +11,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -24,9 +22,6 @@ import javafx.stage.Stage;
  * It displays a list of enclosures and collections by opening an enclosure view
  */
 public class CompositeEnclosureCollectionViewController {
-    @FXML
-    private TextField searchTextField;
-
     @FXML
     private ListView<EnclosureCollection> enclosureListView;
 
@@ -39,14 +34,8 @@ public class CompositeEnclosureCollectionViewController {
     @FXML
     private Button closeButton;
 
-    /**
-     * Root composite collection loaded using ImportHelper
-     */
     private CompositeEnclosureCollection rootCollection;
 
-    /**
-     * ObservableList is a list of currently displayed enclosure items
-     */
     private ObservableList<EnclosureCollection> displayedChildren;
 
     /**
@@ -56,36 +45,29 @@ public class CompositeEnclosureCollectionViewController {
     @FXML
     private void initialize() {
         // Load Big Cats from ImportHelper
+
         rootCollection = ImportHelper.createAnimals();
 
         // Load the children into the ListView
         displayedChildren = FXCollections.observableArrayList(rootCollection.getChildren());
         enclosureListView.setItems(displayedChildren);
 
-        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> filterList(newValue));
-
     }
 
     /**
-     * This method filters the ListView based on the user's search input
-     * @param searchTerm the text entered in the search field
+     * Sets the root collection (composite) to be displayed in the view
+     * @param collection to be displayed(Tiger Cubs. Tiger habitats)
      */
-    private void filterList(String searchTerm) {
-        if (searchTerm == null || searchTerm.isEmpty()) {
-            displayedChildren.setAll(rootCollection.getChildren());
-            return;
-        }
 
-        displayedChildren.setAll(rootCollection.getChildren().stream()
-                .filter(collection -> collection.getName().toLowerCase()
-                        .contains(searchTerm.toLowerCase()))
-                            .toList()
-        );
+    private void setRootCollection(CompositeEnclosureCollection collection) {
+        this.rootCollection = collection;
+        displayedChildren = FXCollections.observableArrayList(rootCollection.getChildren());
+        enclosureListView.setItems(displayedChildren);
     }
 
     /**
      * Handles the Open button
-     * If the selected item is a composite, a warning alert is shown.
+     * If the selected item is a composite, it opens another compositeenclosurecollectionview
      * If it is an enclosure, the enclosure view window is opened.
      */
     @FXML
@@ -93,16 +75,22 @@ public class CompositeEnclosureCollectionViewController {
         EnclosureCollection selected =  enclosureListView.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
-        if (selected.isComposite()) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Invalid Selection");
-            alert.setHeaderText("Invalid Selection");
-            alert.setContentText("Please select an enclosure");
-            alert.showAndWait();
-            return;
-        }
-
         try {
+            if (selected.isComposite()) {
+                FXMLLoader loader = new FXMLLoader(ZooApplication.class.getResource("compositeenclosurecollection-view.fxml"));
+                Parent view = loader.load();
+
+                CompositeEnclosureCollectionViewController controller = loader.getController();
+                controller.setRootCollection((CompositeEnclosureCollection) selected);
+
+                Stage nextStage = new Stage();
+                nextStage.setScene(new Scene(view));
+                nextStage.initModality(Modality.WINDOW_MODAL);
+                nextStage.initOwner(openButton.getScene().getWindow());
+                nextStage.showAndWait();
+            }
+            else
+            {
             FXMLLoader loader = new FXMLLoader(ZooApplication.class.getResource("enclosure-view.fxml"));
             Parent view = loader.load();
 
@@ -114,6 +102,7 @@ public class CompositeEnclosureCollectionViewController {
             nextStage.initModality(Modality.WINDOW_MODAL);
             nextStage.initOwner(openButton.getScene().getWindow());
             nextStage.showAndWait();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
