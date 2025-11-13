@@ -1,6 +1,7 @@
 package com.example.assigment3zms.Controllers;
 
 import com.example.assigment3zms.Model.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -69,7 +70,7 @@ public class AnimalViewController {
      * Handles the "Save" button click.
      */
     @FXML
-    protected void onSaveButtonClick() {
+    protected void onSaveButtonClick(ActionEvent event) {
         // Validate input
         String name = aNameTextField.getText();
         String type = aTypeChoiceBox.getValue();
@@ -138,7 +139,7 @@ public class AnimalViewController {
      * Handles the "Back" button click.
      */
     @FXML
-    protected void onBackButtonClick() {
+    protected void onBackButtonClick(ActionEvent event) {
         Stage stage = (Stage) aNameTextField.getScene().getWindow();
         stage.close();
     }
