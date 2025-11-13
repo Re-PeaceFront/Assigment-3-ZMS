@@ -7,7 +7,7 @@ import javafx.collections.ObservableList;
  * Represents a Leaf node in the Composite pattern (Enclosure).
  * This class holds a collection of animals.
  */
-public class Enclosure extends EnclosureCollection {
+public class Enclosure implements EnclosureCollection {
     private final String name;
     private final ObservableList<Animal> animals;
 
@@ -40,14 +40,17 @@ public class Enclosure extends EnclosureCollection {
         return this.animals;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public ObservableList<EnclosureCollection> getChildren() {
         return null; // Leaf nodes don't have composite children
     }
 
+    @Override
     public boolean isComposite() {
         return false;
     }
