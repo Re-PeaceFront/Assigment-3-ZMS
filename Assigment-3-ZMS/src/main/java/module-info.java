@@ -9,8 +9,9 @@ module com.example.assigment3zms {
     // Required for JavaFX properties (IntegerProperty, StringProperty, etc.)
     requires javafx.base;
 
-    // Export main package for application launch
-    exports com.example.assigment3zms;
+    // Open main package for FXML loading
+    opens com.example.assigment3zms to javafx.fxml;
+    exports com.example.assigment3zms; // error disappears when emmanuelle uploads her gui
 
     // Open Controllers package for FXML loading
     exports com.example.assigment3zms.Controllers;
